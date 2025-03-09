@@ -214,10 +214,9 @@ export default function Home() {
       "touchstart",
       (event) => {
         if (event.touches.length > 0) {
-          mouse.clickX = event.touches[0].clientX
-          mouse.clickY = event.touches[0].clientY
-          mouse.clickRadius = 0
-          mouse.clickActive = true
+          mouse.x = event.touches[0].clientX
+          mouse.y = event.touches[0].clientY
+          mouse.active = true
 
           // Prevent scrolling when interacting with canvas
           if (event.target === canvas) {
@@ -864,3 +863,4 @@ interface Particle {
   sparkleSpeed: number
   sparklePhase: number
 }
+

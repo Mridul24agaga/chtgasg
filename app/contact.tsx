@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { Loader2 } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -14,6 +14,20 @@ export default function ContactSection() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+  const [calendlyLoaded, setCalendlyLoaded] = useState(false)
+
+  // Load Calendly script
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://assets.calendly.com/assets/external/widget.js"
+    script.async = true
+    script.onload = () => setCalendlyLoaded(true)
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -89,115 +103,138 @@ export default function ContactSection() {
           </p>
         </div>
 
-        {/* Contact Form */}
-        <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 md:p-12 max-w-4xl mx-auto">
-          <h3 className="text-2xl font-bold text-[#0a1433] mb-6">Send us a message</h3>
+        {/* Contact Form and Calendly in a flex container */}
+        <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
+          {/* Contact Form */}
+          <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 md:p-12 lg:w-1/2">
+            <h3 className="text-2xl font-bold text-[#0a1433] mb-6">Send us a message</h3>
 
-          {success ? (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-              <p className="font-medium">Thank you for your message!</p>
-              <p>We will get back to you as soon as possible.</p>
-            </div>
-          ) : null}
+            {success ? (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+                <p className="font-medium">Thank you for your message!</p>
+                <p>We will get back to you as soon as possible.</p>
+              </div>
+            ) : null}
 
-          {error ? (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-              <p className="font-medium">Error</p>
-              <p>{error}</p>
-            </div>
-          ) : null}
+            {error ? (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <p className="font-medium">Error</p>
+                <p>{error}</p>
+              </div>
+            ) : null}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Your Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    placeholder="John Doe"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                    Your Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                    placeholder="john@example.com"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Name
+                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                  Subject
                 </label>
                 <input
                   type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
                   onChange={handleChange}
                   required
                   disabled={loading}
                   className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                  placeholder="John Doe"
+                  placeholder="How can we help you?"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Email
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                  Message
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
                   required
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                  placeholder="john@example.com"
-                />
+                  rows={5}
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all resize-none disabled:opacity-70 disabled:cursor-not-allowed"
+                  placeholder="Tell us about your project..."
+                ></textarea>
               </div>
-            </div>
 
-            <div>
-              <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                Subject
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                required
-                disabled={loading}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-                placeholder="How can we help you?"
-              />
-            </div>
+              {/* Web3Forms requires a hidden honeypot field to prevent spam */}
+              <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
 
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                required
-                disabled={loading}
-                rows={5}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#4ecdc4] focus:border-transparent outline-none transition-all resize-none disabled:opacity-70 disabled:cursor-not-allowed"
-                placeholder="Tell us about your project..."
-              ></textarea>
-            </div>
+              <div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-8 py-4 bg-[#4361ee] text-white font-medium rounded-lg hover:bg-[#4361ee]/90 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4361ee] focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
 
-            {/* Web3Forms requires a hidden honeypot field to prevent spam */}
-            <input type="checkbox" name="botcheck" className="hidden" style={{ display: "none" }} />
+          {/* Calendly Widget */}
+          <div className="bg-white rounded-2xl border-2 border-gray-200 p-8 md:p-12 lg:w-1/2">
+            <h3 className="text-2xl font-bold text-[#0a1433] mb-6">Schedule a Meeting</h3>
+            <p className="text-gray-600 mb-6">
+              Prefer to talk directly? Schedule a call with our team at a time that works for you.
+            </p>
 
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-8 py-4 bg-[#4361ee] text-white font-medium rounded-lg hover:bg-[#4361ee]/90 transition-colors focus:outline-none focus:ring-2 focus:ring-[#4361ee] focus:ring-offset-2 disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  "Send Message"
-                )}
-              </button>
+            <div
+              className="calendly-inline-widget"
+              data-url="https://calendly.com/chatingify?hide_gdpr_banner=1"
+              style={{ minWidth: "320px", height: "700px" }}
+            >
+              {!calendlyLoaded && (
+                <div className="flex items-center justify-center h-full">
+                  <Loader2 className="h-8 w-8 animate-spin text-[#4361ee]" />
+                </div>
+              )}
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </section>

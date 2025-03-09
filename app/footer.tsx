@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Facebook, Twitter, Instagram, Linkedin, Mail } from "lucide-react"
+import { Facebook, Instagram, Mail } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -17,7 +17,25 @@ export default function Footer() {
               Transforming businesses with cutting-edge AI chatbot solutions that drive engagement, streamline support,
               and boost conversions.
             </p>
-          
+            {/* Social Media Icons */}
+            <div className="flex space-x-4">
+              <a
+                href="https://www.facebook.com/chatingify"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.instagram.com/chatingify"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
@@ -90,8 +108,8 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-center">
                 <Mail className="w-5 h-5 text-[#4ecdc4] mr-3" />
-                <a href="mailto:chatinify@gmail.com" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  chatinify@gmail.com
+                <a href="mailto:chatingify@gmail.com" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                  chatingify@gmail.com
                 </a>
               </li>
             </ul>
@@ -106,6 +124,7 @@ export default function Footer() {
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
               © {new Date().getFullYear()} Chatingify. All rights reserved.
             </p>
+           
           </div>
         </div>
       </div>
